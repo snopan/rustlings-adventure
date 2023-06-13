@@ -24,9 +24,12 @@ struct Team {
 }
 
 fn add_team_score(scores: &mut HashMap<String, Team>, name: String, goals_scored: u8, goals_conceded: u8) {
-    let name_copy = name.clone();
-
-    let team = scores.entry(name_copy).or_insert(Team { name, goals_scored: 0, goals_conceded: 0 });
+    let team = scores.entry(name.to_string())
+        .or_insert(Team {
+            name: name.to_string(),
+            goals_scored: 0,
+            goals_conceded: 0
+        });
     team.goals_scored += goals_scored;
     team.goals_conceded += goals_conceded;
 }
@@ -41,11 +44,6 @@ fn build_scores_table(results: String) -> HashMap<String, Team> {
         let team_1_score: u8 = v[2].parse().unwrap();
         let team_2_name = v[1].to_string();
         let team_2_score: u8 = v[3].parse().unwrap();
-        // TODO: Populate the scores table with details extracted from the
-        // current line. Keep in mind that goals scored by team_1
-        // will be the number of goals conceded from team_2, and similarly
-        // goals scored by team_2 will be the number of goals conceded by
-        // team_1.
 
         add_team_score(&mut scores, team_1_name, team_1_score, team_2_score);
         add_team_score(&mut scores, team_2_name, team_2_score, team_1_score);
