@@ -23,8 +23,6 @@ enum IntoColorError {
     IntConversion,
 }
 
-// I AM NOT DONE
-
 // Your task is to complete this implementation
 // and return an Ok result of inner type Color.
 // You need to create an implementation for a tuple of three integers,
@@ -38,6 +36,25 @@ enum IntoColorError {
 impl TryFrom<(i16, i16, i16)> for Color {
     type Error = IntoColorError;
     fn try_from(tuple: (i16, i16, i16)) -> Result<Self, Self::Error> {
+        // tuple.
+        let (red, green, blue) = tuple;
+        let color_arr = vec![red, green, blue];
+
+        let convert = color_arr.iter()
+            .map(|&x| u8::try_from(x))
+            .collect::<Result<Vec<u8>, _>>();
+
+        if convert.is_err() {
+            return Err(Self::Error::IntConversion);
+        }
+
+        let converted = convert.unwrap();
+
+        Ok(Color {
+            red: converted[0],
+            green: converted[1],
+            blue: converted[2]
+        })
     }
 }
 
@@ -45,6 +62,21 @@ impl TryFrom<(i16, i16, i16)> for Color {
 impl TryFrom<[i16; 3]> for Color {
     type Error = IntoColorError;
     fn try_from(arr: [i16; 3]) -> Result<Self, Self::Error> {
+        let convert = arr.iter()
+            .map(|&x| u8::try_from(x))
+            .collect::<Result<Vec<u8>, _>>();
+
+        if convert.is_err() {
+            return Err(Self::Error::IntConversion);
+        }
+
+        let converted = convert.unwrap();
+
+        Ok(Color {
+            red: converted[0],
+            green: converted[1],
+            blue: converted[2]
+        })
     }
 }
 
@@ -52,6 +84,25 @@ impl TryFrom<[i16; 3]> for Color {
 impl TryFrom<&[i16]> for Color {
     type Error = IntoColorError;
     fn try_from(slice: &[i16]) -> Result<Self, Self::Error> {
+        if slice.len() != 3 {
+            return Err(Self::Error::BadLen);
+        }
+
+        let convert = slice.iter()
+            .map(|&x| u8::try_from(x))
+            .collect::<Result<Vec<u8>, _>>();
+
+        if convert.is_err() {
+            return Err(Self::Error::IntConversion);
+        }
+
+        let converted = convert.unwrap();
+
+        Ok(Color {
+            red: converted[0],
+            green: converted[1],
+            blue: converted[2]
+        })
     }
 }
 
